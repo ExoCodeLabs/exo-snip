@@ -223,6 +223,12 @@ print(square(5))  # Output: 25`,
   },
 }
 
+export function generateStaticParams() {
+  return Object.keys(technologies).map((tech) => ({
+    technology: tech,
+  }))
+}
+
 export default function TechnologyPage({ params }) {
   const tech = technologies[params.technology]
 
