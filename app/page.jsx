@@ -9,9 +9,11 @@ import {
 } from "lucide-react"
 
 const technologies = [
+  { name: "Express.js", slug: "express", icon: Nodejs },
   { name: "React", slug: "react", icon: ReactIcon },
+  { name: "Node.js", slug: "nodejs", icon: Nodejs },
   { name: "Git", slug: "git", icon: Git },
-  // { name: "Node.js", slug: "nodejs", icon: Nodejs },
+
   // { name: "JavaScript", slug: "javascript", icon: FileJson },
   // { name: "TypeScript", slug: "typescript", icon: FileType },
   // { name: "Python", slug: "python", icon: Python },
@@ -31,7 +33,7 @@ export default function Home() {
       <h2 className="text-3xl font-bold mb-8 text-center text-orange-500">
         Code Snippets Library
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {technologies.map((tech) => (
           <Link
             key={tech.slug}

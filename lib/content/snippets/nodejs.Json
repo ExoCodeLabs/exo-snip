@@ -1,0 +1,61 @@
+{
+    "name": "Node.js",
+    "icon": "NodeJsIcon",
+    "description": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows you to run JavaScript on the server-side. This guide walks you through creating a simple web server in Node.js with best practices for project structure.",
+    "snippets": [
+        {
+            "title": "Project Directory Structure",
+            "codeDes": "Step 1: A well-organized project structure helps maintain clean and scalable code. Here’s the recommended file structure for your Node.js project:<br><ul><li><code>node-app/</code>: Root directory of the project.</li><li><code>src/</code>: Contains source code.<ul><li><code>routes/</code>: Contains route handlers.<ul><li><code>index.js</code>: Main route handler.</li></ul></li><li><code>controllers/</code>: Contains controller functions.<ul><li><code>homeController.js</code>: Controller for home route.</li></ul></li><li><code>app.js</code>: Main application file.</li></ul></li><li><code>package.json</code>: Contains project metadata and dependencies.</li><li><code>README.md</code>: Project documentation.</li></ul>",
+            "code": "node-app/\n│── src/\n│   ├── routes/\n│   │   ├── index.js\n│   ├── controllers/\n│   │   ├── homeController.js\n│   ├── app.js\n│── package.json\n│── README.md",
+            "language": "plaintext"
+        },
+        {
+            "title": "Install Node.js and Initialize Project",
+            "codeDes": "Step 2: Before starting, you need to install Node.js. After installing Node.js, you can initialize a new Node.js project using npm (Node Package Manager). This will create a `package.json` file to manage your project's dependencies.",
+            "code": "npm init -y",
+            "language": "bash"
+        },
+        {
+            "title": "Create a Simple Web Server (app.js)",
+            "codeDes": "Step 3: In this step, you will create a simple web server using Node.js. This server will listen on a specified port and respond with 'Hello, World!' when accessed.",
+            "code": "const http = require('http');\n\nconst hostname = '127.0.0.1';\nconst port = 3000;\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.setHeader('Content-Type', 'text/plain');\n  res.end('Hello, World!');\n});\n\nserver.listen(port, hostname, () => {\n  console.log(`Server running at http://${hostname}:${port}/`);\n});",
+            "language": "javascript"
+        },
+        {
+            "title": "Create Route Handlers (index.js)",
+            "codeDes": "Step 4: In this step, you will create route handlers to manage different routes in your application. This example shows how to handle the root route ('/').",
+            "code": "const express = require('express');\nconst router = express.Router();\nconst homeController = require('../controllers/homeController');\n\nrouter.get('/', homeController.home);\n\nmodule.exports = router;",
+            "language": "javascript"
+        },
+        {
+            "title": "Create Controller Functions (homeController.js)",
+            "codeDes": "Step 5: Here, you will create a controller function to handle the logic for the home route. This function will send a response with 'Welcome to Node.js!' when the root route is accessed.",
+            "code": "exports.home = (req, res) => {\n  res.send('Welcome to Node.js!');\n};",
+            "language": "javascript"
+        },
+        {
+            "title": "Integrate Routes in Main Application (app.js)",
+            "codeDes": "Step 6: In this step, you will integrate the route handlers into the main application file. This will allow your application to handle different routes using the route handlers you created.",
+            "code": "const express = require('express');\nconst app = express();\nconst indexRouter = require('./routes/index');\n\napp.use('/', indexRouter);\n\nconst port = process.env.PORT || 3000;\napp.listen(port, () => {\n  console.log(`Server running on port ${port}`);\n});",
+            "language": "javascript"
+        },
+        {
+            "title": "Install Express.js",
+            "codeDes": "Step 7: Express.js is a web application framework for Node.js. It provides a robust set of features to develop web and mobile applications. You need to install Express.js to handle routing and middleware in your Node.js application.",
+            "code": "npm install express",
+            "language": "bash"
+        },
+        {
+            "title": "Run the Node.js Application",
+            "codeDes": "Step 8: Now that your Node.js application is complete, you can start the server to see your app in action. This will allow you to interact with your Node.js application in a web browser.",
+            "code": "node src/app.js",
+            "language": "bash"
+        },
+        {
+            "title": "Best Practices for Project Structure",
+            "codeDes": "Step 9: Follow these best practices to keep your project clean and maintainable:\n1. Use a routes folder: Keep route handlers in `src/routes/` for better organization.\n2. Separate logic from routes: Maintain controller functions in `src/controllers/` while keeping route definitions in separate files.\n3. Use meaningful file names: Avoid generic names like `handler.js`, use `homeController.js`, `index.js`, etc.\n4. Keep functions reusable: Functions like `home` should be kept modular for reusability.\n5. Keep configuration separate: Use environment variables or configuration files for settings like port numbers.",
+            "code": "1. Use a routes folder: Keep route handlers in `src/routes/` for better organization.\n2. Separate logic from routes: Maintain controller functions in `src/controllers/` while keeping route definitions in separate files.\n3. Use meaningful file names: Avoid generic names like `handler.js`, use `homeController.js`, `index.js`, etc.\n4. Keep functions reusable: Functions like `home` should be kept modular for reusability.\n5. Keep configuration separate: Use environment variables or configuration files for settings like port numbers.",
+            "language": "bash"
+        }
+    ]
+}

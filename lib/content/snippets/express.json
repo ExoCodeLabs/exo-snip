@@ -1,0 +1,73 @@
+{
+    "name": "Express.js",
+    "icon": "ExpressIcon",
+    "description": "Express.js is a web application framework for Node.js, designed for building web applications and APIs. This guide walks you through creating a simple To-Do API using Express.js and MongoDB, with best practices for project structure and .env configuration.",
+    "snippets": [
+        {
+            "title": "Project Directory Structure",
+            "codeDes": "Step 1: A well-organized project structure helps maintain clean and scalable code. Here’s the recommended file structure for your To-Do API:\n\n<ul>\n<li><code>todo-api/</code>: Root directory of the project.</li>\n<li><code>src/</code>: Contains source code.\n  <ul>\n    <li><code>controllers/</code>: Contains request handlers.\n      <ul>\n        <li><code>todoController.js</code>: Handles to-do related requests.</li>\n      </ul>\n    </li>\n    <li><code>models/</code>: Contains database models.\n      <ul>\n        <li><code>todoModel.js</code>: Defines the to-do schema.</li>\n      </ul>\n    </li>\n    <li><code>routes/</code>: Contains route definitions.\n      <ul>\n        <li><code>todoRoutes.js</code>: Defines routes for to-do operations.</li>\n      </ul>\n    </li>\n    <li><code>app.js</code>: Main application file.</li>\n    <li><code>config.js</code>: Configuration file for environment variables.</li>\n  </ul>\n</li>\n<li><code>.env</code>: Environment variables.</li>\n<li><code>package.json</code>: Contains project metadata and dependencies.</li>\n<li><code>README.md</code>: Project documentation.</li>\n</ul>\n\nThis structure helps you keep your code organized and easy to manage.",
+            "code": "todo-api/\n│── src/\n│   ├── controllers/\n│   │   ├── todoController.js\n│   ├── models/\n│   │   ├── todoModel.js\n│   ├── routes/\n│   │   ├── todoRoutes.js\n│   ├── app.js\n│   ├── config.js\n│── .env\n│── package.json\n│── README.md",
+            "language": "plaintext"
+        },
+        {
+            "title": "Install Node.js and Create a New Project",
+            "codeDes": "Step 2: Before starting, you need to install Node.js. Node.js allows you to run JavaScript on the server. After installing Node.js, you can create a new project directory and initialize it with npm (Node Package Manager). This sets up a new Node.js project and creates a `package.json` file to manage your project's dependencies.",
+            "code": "mkdir todo-api\ncd todo-api\nnpm init -y",
+            "language": "bash"
+        },
+        {
+            "title": "Install Required Dependencies",
+            "codeDes": "Step 3: Install the necessary dependencies for your project. Dependencies are libraries or packages that your project needs to work. Here, we are installing Express.js (a web framework for Node.js), Mongoose (a library to interact with MongoDB), and dotenv (a module to load environment variables from a `.env` file).",
+            "code": "npm install express mongoose dotenv",
+            "language": "bash"
+        },
+        {
+            "title": "Create Environment Configuration (.env)",
+            "codeDes": "Step 4: Create a `.env` file in the root directory to store your environment variables. Environment variables are used to store configuration settings. This file will contain your MongoDB connection string and the port number your server will run on. Keeping these settings in a separate file makes it easier to manage and change them without modifying your code.",
+            "code": "MONGO_URI=mongodb://localhost:27017/todoapp\nPORT=3000",
+            "language": "plaintext"
+        },
+        {
+            "title": "Setup Configuration File (config.js)",
+            "codeDes": "Step 5: Create a `config.js` file to load environment variables from the `.env` file. This file will read the variables from the `.env` file and make them available in your application. This way, you can easily access your configuration settings from anywhere in your code.",
+            "code": "require('dotenv').config();\n\nmodule.exports = {\n  mongoURI: process.env.MONGO_URI,\n  port: process.env.PORT || 3000\n};",
+            "language": "javascript"
+        },
+        {
+            "title": "Define the To-Do Model (todoModel.js)",
+            "codeDes": "Step 6: Create a Mongoose model for the to-do items. A model is a blueprint for how your data should look. This model defines the schema for the to-do items in the database, specifying the fields and their types. Here, each to-do item has a `text` field (a string) and a `completed` field (a boolean).",
+            "code": "const mongoose = require('mongoose');\n\nconst todoSchema = new mongoose.Schema({\n  text: { type: String, required: true },\n  completed: { type: Boolean, default: false }\n});\n\nmodule.exports = mongoose.model('Todo', todoSchema);",
+            "language": "javascript"
+        },
+        {
+            "title": "Create To-Do Controller (todoController.js)",
+            "codeDes": "Step 7: Create a controller to handle the logic for creating, reading, updating, and deleting to-do items. Controllers are responsible for handling requests and sending responses. Here, we define methods to get all to-do items, create a new to-do item, update an existing to-do item, and delete a to-do item.\n\n- `getTodos`: Fetches all to-do items from the database and returns them as a JSON response.\n- `createTodo`: Creates a new to-do item with the text provided in the request body and saves it to the database.\n- `updateTodo`: Finds a to-do item by its ID, updates its `completed` status with the value provided in the request body, and saves the changes to the database.\n- `deleteTodo`: Finds a to-do item by its ID and deletes it from the database.",
+            "code": "const Todo = require('../models/todoModel');\n\nexports.getTodos = async (req, res) => {\n  try {\n    const todos = await Todo.find();\n    res.json(todos);\n  } catch (err) {\n    res.status(500).json({ message: err.message });\n  }\n};\n\nexports.createTodo = async (req, res) => {\n  const todo = new Todo({ text: req.body.text });\n  try {\n    const newTodo = await todo.save();\n    res.status(201).json(newTodo);\n  } catch (err) {\n    res.status(400).json({ message: err.message });\n  }\n};\n\nexports.updateTodo = async (req, res) => {\n  try {\n    const todo = await Todo.findById(req.params.id);\n    if (!todo) return res.status(404).json({ message: 'Todo not found' });\n    todo.completed = req.body.completed;\n    const updatedTodo = await todo.save();\n    res.json(updatedTodo);\n  } catch (err) {\n    res.status(400).json({ message: err.message });\n  }\n};\n\nexports.deleteTodo = async (req, res) => {\n  try {\n    const todo = await Todo.findById(req.params.id);\n    if (!todo) return res.status(404).json({ message: 'Todo not found' });\n    await todo.remove();\n    res.json({ message: 'Todo deleted' });\n  } catch (err) {\n    res.status(500).json({ message: err.message });\n  }\n};",
+            "language": "javascript"
+        },
+        {
+            "title": "Define To-Do Routes (todoRoutes.js)",
+            "codeDes": "Step 8: Create routes to handle HTTP requests for the to-do items. Routes define the endpoints for your API and specify which controller methods to call for each endpoint. Here, we define routes to get all to-do items, create a new to-do item, update an existing to-do item, and delete a to-do item.",
+            "code": "const express = require('express');\nconst router = express.Router();\nconst todoController = require('../controllers/todoController');\n\nrouter.get('/todos', todoController.getTodos);\nrouter.post('/todos', todoController.createTodo);\nrouter.put('/todos/:id', todoController.updateTodo);\nrouter.delete('/todos/:id', todoController.deleteTodo);\n\nmodule.exports = router;",
+            "language": "javascript"
+        },
+        {
+            "title": "Setup Express Application (app.js)",
+            "codeDes": "Step 9: Create the main application file to set up the Express server, connect to MongoDB, and use the routes you defined. This file initializes the Express application, connects to the MongoDB database using Mongoose, and sets up the routes for handling requests. Finally, it starts the server and listens for incoming requests on the specified port.",
+            "code": "const express = require('express');\nconst mongoose = require('mongoose');\nconst config = require('./config');\nconst todoRoutes = require('./routes/todoRoutes');\n\nconst app = express();\n\nmongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })\n  .then(() => console.log('MongoDB connected'))\n  .catch(err => console.log(err));\n\napp.use(express.json());\napp.use('/api', todoRoutes);\n\napp.listen(config.port, () => {\n  console.log(`Server running on port ${config.port}`);\n});",
+            "language": "javascript"
+        },
+        {
+            "title": "Run the To-Do API",
+            "codeDes": "Step 10: Now that your To-Do API is complete, you can start the server to see your API in action. This will allow you to interact with your To-Do API using tools like Postman or cURL. Running this command will start your server, and you can then send HTTP requests to your API endpoints to create, read, update, and delete to-do items.",
+            "code": "node src/app.js",
+            "language": "bash"
+        },
+        {
+            "title": "Best Practices for Project Structure",
+            "codeDes": "Step 11: Follow these best practices to keep your project clean and maintainable:\n1. Use a controllers folder: Keep request handlers in `src/controllers/` for better organization.\n2. Separate routes from logic: Define routes in `src/routes/` and keep logic in controllers.\n3. Use meaningful file names: Avoid generic names like `controller.js`, use `todoController.js`, etc.\n4. Keep functions reusable: Functions like `getTodos` should be kept modular for reusability.\n5. Keep configuration separate: Use a `config.js` file and `.env` for environment variables. Following these practices will help you write clean, maintainable, and scalable code.",
+            "code": "1. Use a controllers folder: Keep request handlers in `src/controllers/` for better organization.\n2. Separate routes from logic: Define routes in `src/routes/` and keep logic in controllers.\n3. Use meaningful file names: Avoid generic names like `controller.js`, use `todoController.js`, etc.\n4. Keep functions reusable: Functions like `getTodos` should be kept modular for reusability.\n5. Keep configuration separate: Use a `config.js` file and `.env` for environment variables.",
+            "language": "bash"
+        }
+    ]
+}
