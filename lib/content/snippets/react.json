@@ -36,7 +36,7 @@
         {
             "title": "Display the List of To-Dos (TodoList.js)",
             "codeDes": "Step 6: In this step, you will create a component called TodoList. This component will take the list of to-dos and display each item using the TodoItem component you created earlier. It will also handle toggling the completion status of each to-do item when clicked.",
-            "code": "import React from 'react';\nimport TodoItem from './TodoItem';\n\nfunction TodoList({ todos, setTodos }) {\n  const toggleTodo = (index) => {\n    setTodos(prevTodos => {\n      const newTodos = [...prevTodos];\n      newTodos[index].completed = !newTodos[index].completed;\n      return newTodos;\n    });\n  };\n\n  return (\n    <ul>\n      {todos.map((todo, index) => (\n        <TodoItem key={index} text={todo.text} completed={todo.completed} onToggle={() => toggleTodo(index)} />\n      ))}\n    </ul>\n  );\n}\n\nexport default TodoList;",
+            "code": "import React from 'react';\nimport TodoItem from './TodoItem';\n\nfunction TodoList({ todos, setTodos }) {\n  const toggleTodo = (index) => {\n    setTodos((prevTodos) => {\n      const newTodos = prevTodos.map((todo, i) =>\n        i === index ? { ...todo, completed: !todo.completed } : todo\n      );\n      return newTodos;\n    });\n  };\n\n  return (\n    <ul>\n      {todos.map((todo, index) => (\n        <TodoItem\n          key={index + todo.text}\n          text={todo.text}\n          completed={todo.completed}\n          onToggle={() => toggleTodo(index)}\n        />\n      ))}\n    </ul>\n  );\n}\n\nexport default TodoList;",
             "language": "jsx"
         },
         {
