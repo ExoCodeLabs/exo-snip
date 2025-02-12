@@ -40,9 +40,15 @@
             "language": "jsx"
         },
         {
+            "title": "Add CSS for To-Do App",
+            "codeDes": "Step 7: Create a CSS file `src/App.css` to style your To-Do App and make it more appealing.",
+            "code": "/* src/App.css */\nbody {\n  font-family: Arial, sans-serif;\n  background-color: #f0f0f0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n}\n\nh1 {\n  color: #333;\n}\n\ndiv {\n  background: white;\n  padding: 20px;\n  border-radius: 8px;\n  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n}\n\nul {\n  list-style: none;\n  padding: 0;\n}\n\nli {\n  padding: 10px;\n  border-bottom: 1px solid #ddd;\n}\n\nli:last-child {\n  border-bottom: none;\n}\n\ninput {\n  padding: 10px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  margin-right: 10px;\n}\n\nbutton {\n  padding: 10px 15px;\n  border: none;\n  background-color: #28a745;\n  color: white;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background-color: #218838;\n}",
+            "language": "css"
+        },
+        {
             "title": "Complete To-Do App Code (App.js)",
-            "codeDes": "Step 7: In `src/App.js`, integrate all the sub-components and manage the application's state.",
-            "code": "import React, { useState } from 'react';\nimport TodoInput from './components/TodoInput';\nimport TodoList from './components/TodoList';\n\nfunction App() {\n  const [todos, setTodos] = useState([]);\n\n  return (\n    <div>\n      <h1>My To-Do List</h1>\n      <TodoInput setTodos={setTodos} />\n      <TodoList todos={todos} setTodos={setTodos} />\n    </div>\n  );\n}\n\nexport default App;",
+            "codeDes": "Step 8: In `src/App.js`, integrate all the sub-components and manage the application's state. Also, import the CSS file for styling.",
+            "code": "import React, { useState } from 'react';\nimport './App.css';\nimport TodoInput from './components/TodoInput';\nimport TodoList from './components/TodoList';\n\nfunction App() {\n  const [todos, setTodos] = useState([]);\n\n  return (\n    <div>\n      <h1>My To-Do List</h1>\n      <TodoInput setTodos={setTodos} />\n      <TodoList todos={todos} setTodos={setTodos} />\n    </div>\n  );\n}\n\nexport default App;",
             "language": "jsx"
         },
         {
