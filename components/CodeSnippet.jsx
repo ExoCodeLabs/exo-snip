@@ -5,7 +5,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { Copy, Check } from "lucide-react"
 
-export default function CodeSnippet({ code, language, title, des = "" }) {
+export default function CodeSnippet({ code, language, title, codeDes = "" }) {
   const [copied, setCopied] = useState(false)
 
   const copyToClipboard = async () => {
@@ -24,7 +24,7 @@ export default function CodeSnippet({ code, language, title, des = "" }) {
         {title}
       </h2>
       <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700 w-full">
-        <p className="text-gray-300">{des}</p>
+        <p className="text-gray-300">{codeDes}</p>
       </div>
       <div className="flex justify-between items-center mb-2">
         <div></div>

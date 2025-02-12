@@ -1,0 +1,115 @@
+{
+    "name": "Git",
+    "icon": "GitIcon",
+    "description": "Git is a version control system that helps track and manage changes in files, enabling collaboration and tracking history efficiently.",
+    "snippets": [
+        {
+            "title": "Install Git (Windows)",
+            "codeDes": "To install Git on Windows, download the installer from the official Git website and follow the setup instructions. Once installed, you can check if Git is installed by running the command below.",
+            "code": "git --version",
+            "language": "bash"
+        },
+        {
+            "title": "Install Git (Mac)",
+            "codeDes": "Mac users can install Git using Homebrew, a package manager for macOS. After installation, verify Git is installed by checking its version.",
+            "code": "brew install git\ngit --version",
+            "language": "bash"
+        },
+        {
+            "title": "Install Git (Linux)",
+            "codeDes": "For Linux users, Git can be installed using package managers like apt (Ubuntu/Debian) or yum (RedHat/CentOS). The command below installs Git based on your distribution.",
+            "code": "sudo apt install git  # Ubuntu/Debian\nsudo yum install git  # RedHat/CentOS\ngit --version",
+            "language": "bash"
+        },
+        {
+            "title": "Configure Git Username and Email",
+            "codeDes": "Before using Git, you need to set up your username and email. This information is stored globally and is used to associate your commits with your identity.",
+            "code": "git config --global user.name \"Your Name\"\ngit config --global user.email \"your-email@example.com\"",
+            "language": "bash"
+        },
+        {
+            "title": "Verify Git Configuration",
+            "codeDes": "This command checks your current Git settings, including your username and email. It helps ensure everything is configured correctly before making commits.",
+            "code": "git config --global --list",
+            "language": "bash"
+        },
+        {
+            "title": "Generate SSH Key",
+            "codeDes": "GitHub requires authentication when working with remote repositories. An SSH key allows you to connect securely without entering your password every time. The command below generates a new SSH key.",
+            "code": "ssh-keygen -t rsa -b 4096 -C \"your-email@example.com\"",
+            "language": "bash"
+        },
+        {
+            "title": "Add SSH Key to GitHub",
+            "codeDes": "Once your SSH key is generated, copy the public key and add it to your GitHub account under SSH keys. This allows GitHub to recognize and authenticate your device.",
+            "code": "cat ~/.ssh/id_rsa.pub",
+            "language": "bash"
+        },
+        {
+            "title": "Test SSH Connection",
+            "codeDes": "After adding the SSH key to GitHub, use this command to check if the connection is successful. If configured correctly, you will see a success message.",
+            "code": "ssh -T git@github.com",
+            "language": "bash"
+        },
+        {
+            "title": "Initialize a Git Repository",
+            "codeDes": "This command starts tracking changes in a folder by initializing a new Git repository. Run it inside the project folder you want to manage with Git.",
+            "code": "git init",
+            "language": "bash"
+        },
+        {
+            "title": "Check Repository Status",
+            "codeDes": "This command displays the current state of your repository, showing which files are modified, staged, or untracked.",
+            "code": "git status",
+            "language": "bash"
+        },
+        {
+            "title": "Add a File to Staging",
+            "codeDes": "To include a file in the next commit, you need to add it to the staging area using this command. Replace 'filename.txt' with your actual file name.",
+            "code": "git add filename.txt",
+            "language": "bash"
+        },
+        {
+            "title": "Add All Files to Staging",
+            "codeDes": "Instead of adding files one by one, you can use this command to stage all modified and new files at once.",
+            "code": "git add .",
+            "language": "bash"
+        },
+        {
+            "title": "Commit Changes",
+            "codeDes": "A commit saves your staged changes with a descriptive message explaining what was modified. The message should be meaningful for future reference.",
+            "code": "git commit -m \"Initial commit\"",
+            "language": "bash"
+        },
+        {
+            "title": "View Commit History",
+            "codeDes": "This command displays a list of past commits in a simplified one-line format, making it easier to track changes over time.",
+            "code": "git log --oneline",
+            "language": "bash"
+        },
+        {
+            "title": "Connect Local Repository to GitHub",
+            "codeDes": "To push your local repository to GitHub, first, link it to a remote repository using this command. Replace the URL with your actual GitHub repository link.",
+            "code": "git remote add origin https://github.com/your-username/your-repo.git",
+            "language": "bash"
+        },
+        {
+            "title": "Push Changes to GitHub",
+            "codeDes": "After committing changes locally, use this command to upload them to GitHub. The '-u' flag sets 'origin main' as the default remote branch.",
+            "code": "git branch -M main\ngit push -u origin main",
+            "language": "bash"
+        },
+        {
+            "title": "Clone a Repository",
+            "codeDes": "To work with an existing project, you can create a copy of a GitHub repository on your local computer using this command. Replace the URL with the repository link.",
+            "code": "git clone https://github.com/your-username/your-repo.git",
+            "language": "bash"
+        },
+        {
+            "title": "Pull Latest Changes",
+            "codeDes": "If you're collaborating with others, this command fetches and merges the latest changes from the remote repository to your local copy.",
+            "code": "git pull origin main",
+            "language": "bash"
+        }
+    ]
+}

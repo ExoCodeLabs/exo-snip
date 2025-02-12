@@ -1,0 +1,61 @@
+{
+    "name": "React",
+    "icon": "ReactIcon",
+    "description": "React is a JavaScript library for building interactive user interfaces, particularly single-page applications. This guide walks you through creating a simple To-Do App in React with best practices for project structure.",
+    "snippets": [
+        {
+            "title": "Project Directory Structure",
+            "codeDes": "A well-organized project structure helps maintain clean and scalable code. Here’s the recommended file structure for your To-Do App.",
+            "code": "todo-app/\n│── src/\n│   ├── components/\n│   │   ├── TodoInput.js\n│   │   ├── TodoItem.js\n│   │   ├── TodoList.js\n│   ├── App.js\n│   ├── index.js\n│── public/\n│── package.json\n│── README.md",
+            "language": "plaintext"
+        },
+        {
+            "title": "Install Node.js and Create a React App",
+            "codeDes": "Before starting, install Node.js from nodejs.org. Then, create a new React project using Create React App, a tool that sets up a modern React environment.",
+            "code": "npx create-react-app todo-app\ncd todo-app\nnpm start",
+            "language": "bash"
+        },
+        {
+            "title": "Create a To-Do Component (TodoItem.js)",
+            "codeDes": "A functional component that displays individual to-do items. It receives props (text, completed) and applies styles based on completion status.",
+            "code": "import React from 'react';\n\nfunction TodoItem({ text, completed, onToggle }) {\n  return (\n    <li onClick={onToggle} style={{ textDecoration: completed ? 'line-through' : 'none', cursor: 'pointer' }}>\n      {text}\n    </li>\n  );\n}\n\nexport default TodoItem;",
+            "language": "jsx"
+        },
+        {
+            "title": "Manage State with useState Hook (App.js)",
+            "codeDes": "The useState hook allows us to manage the list of to-dos dynamically. It provides a state variable and a function to update it.",
+            "code": "import React, { useState } from 'react';\nimport TodoInput from './components/TodoInput';\nimport TodoList from './components/TodoList';\n\nfunction App() {\n  const [todos, setTodos] = useState([]);\n\n  return (\n    <div>\n      <h1>My To-Do List</h1>\n      <TodoInput setTodos={setTodos} />\n      <TodoList todos={todos} setTodos={setTodos} />\n    </div>\n  );\n}\n\nexport default App;",
+            "language": "jsx"
+        },
+        {
+            "title": "Create an Input Component (TodoInput.js)",
+            "codeDes": "A component that contains an input field and a button. Users can type a task and add it to the list when submitted.",
+            "code": "import React, { useState } from 'react';\n\nfunction TodoInput({ setTodos }) {\n  const [input, setInput] = useState('');\n\n  const handleSubmit = (e) => {\n    e.preventDefault();\n    if (input.trim()) {\n      setTodos(prevTodos => [...prevTodos, { text: input, completed: false }]);\n      setInput('');\n    }\n  };\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input value={input} onChange={(e) => setInput(e.target.value)} />\n      <button type=\"submit\">Add</button>\n    </form>\n  );\n}\n\nexport default TodoInput;",
+            "language": "jsx"
+        },
+        {
+            "title": "Display the List of To-Dos (TodoList.js)",
+            "codeDes": "A component that maps through the list of to-dos and displays each item using the TodoItem component.",
+            "code": "import React from 'react';\nimport TodoItem from './TodoItem';\n\nfunction TodoList({ todos, setTodos }) {\n  const toggleTodo = (index) => {\n    setTodos(prevTodos => {\n      const newTodos = [...prevTodos];\n      newTodos[index].completed = !newTodos[index].completed;\n      return newTodos;\n    });\n  };\n\n  return (\n    <ul>\n      {todos.map((todo, index) => (\n        <TodoItem key={index} text={todo.text} completed={todo.completed} onToggle={() => toggleTodo(index)} />\n      ))}\n    </ul>\n  );\n}\n\nexport default TodoList;",
+            "language": "jsx"
+        },
+        {
+            "title": "Complete To-Do App Code (App.js)",
+            "codeDes": "The final App component integrates all the sub-components and manages the application's state.",
+            "code": "import React, { useState } from 'react';\nimport TodoInput from './components/TodoInput';\nimport TodoList from './components/TodoList';\n\nfunction App() {\n  const [todos, setTodos] = useState([]);\n\n  return (\n    <div>\n      <h1>My To-Do List</h1>\n      <TodoInput setTodos={setTodos} />\n      <TodoList todos={todos} setTodos={setTodos} />\n    </div>\n  );\n}\n\nexport default App;",
+            "language": "jsx"
+        },
+        {
+            "title": "Run the To-Do App",
+            "codeDes": "Start the React development server to see the To-Do App in action.",
+            "code": "npm start",
+            "language": "bash"
+        },
+        {
+            "title": "Best Practices for Project Structure",
+            "codeDes": "",
+            "code": "1. **Use a components folder**: Keep UI components in `src/components/` for better organization.\n2. **Separate logic from presentation**: Maintain state and logic in `App.js` while keeping reusable UI elements in separate components.\n3. **Use meaningful file names**: Avoid generic names like `Component.js`, use `TodoInput.js`, `TodoList.js`, etc.\n4. **Keep functions reusable**: Functions like `toggleTodo` should be kept modular for reusability.\n5. **Keep styling separate**: Use a `styles/` folder or CSS-in-JS solutions like Styled Components.",
+            "language": "bash"
+        }
+    ]
+}
