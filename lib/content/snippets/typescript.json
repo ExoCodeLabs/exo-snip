@@ -1,0 +1,67 @@
+{
+  "name": "TypeScript",
+  "icon": "FileType",
+  "description": "TypeScript adds a static type system to JavaScript, helping you catch mistakes earlier and design better APIs. This track covers core types and a small project pattern.",
+  "snippets": [
+    {
+      "title": "Initialize a TypeScript Project",
+      "codeDes": "Create a project and install TypeScript compiler tooling.",
+      "code": "mkdir ts-lab\ncd ts-lab\nnpm init -y\nnpm install -D typescript tsx @types/node\nnpx tsc --init",
+      "language": "bash"
+    },
+    {
+      "title": "Recommended tsconfig for Learning",
+      "codeDes": "Enable strict mode early so type feedback is useful from day one.",
+      "code": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"NodeNext\",\n    \"moduleResolution\": \"NodeNext\",\n    \"strict\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"outDir\": \"dist\"\n  },\n  \"include\": [\"src\"]\n}",
+      "language": "json"
+    },
+    {
+      "title": "Model Domain Data with Types and Interfaces",
+      "codeDes": "Use aliases for unions and interfaces for object shapes.",
+      "code": "type ExpenseCategory = 'food' | 'travel' | 'tools'\n\ninterface Expense {\n  id: string\n  description: string\n  amount: number\n  category: ExpenseCategory\n}\n\nconst sample: Expense = {\n  id: 'e1',\n  description: 'Keyboard',\n  amount: 89,\n  category: 'tools'\n}",
+      "language": "typescript"
+    },
+    {
+      "title": "Generic Helper for API Results",
+      "codeDes": "Generics let one utility function stay type-safe for many response shapes.",
+      "code": "type Result<T> =\n  | { ok: true; data: T }\n  | { ok: false; error: string }\n\nasync function toResult<T>(promise: Promise<T>): Promise<Result<T>> {\n  try {\n    return { ok: true, data: await promise }\n  } catch (error) {\n    return { ok: false, error: (error as Error).message }\n  }\n}",
+      "language": "typescript"
+    },
+    {
+      "title": "Discriminated Union for Command Parsing",
+      "codeDes": "Use command tags to safely branch business logic.",
+      "code": "type Command = { type: 'add'; text: string } | { type: 'list' } | { type: 'remove'; id: string }\n\nfunction run(command: Command) {\n  switch (command.type) {\n    case 'add':\n      return `adding ${command.text}`\n    case 'remove':\n      return `removing ${command.id}`\n    case 'list':\n      return 'listing'\n  }\n}",
+      "language": "typescript"
+    },
+    {
+      "title": "Type Guard for Unknown JSON",
+      "codeDes": "Validate unknown values from files or APIs before trusting their shape.",
+      "code": "interface User {\n  id: number\n  name: string\n}\n\nfunction isUser(value: unknown): value is User {\n  return typeof value === 'object' && value !== null &&\n    typeof (value as User).id === 'number' &&\n    typeof (value as User).name === 'string'\n}",
+      "language": "typescript"
+    },
+    {
+      "title": "Mini Project: Expense Store with Typed Reducer",
+      "codeDes": "Small project idea: build a typed expense tracker core you can reuse in React, Node, or tests.",
+      "code": "interface Expense { id: string; description: string; amount: number }\ntype Action = { type: 'expense/added'; expense: Expense } | { type: 'expense/removed'; id: string }\n\nfunction expenseReducer(state: Expense[], action: Action): Expense[] {\n  switch (action.type) {\n    case 'expense/added':\n      return [...state, action.expense]\n    case 'expense/removed':\n      return state.filter((expense) => expense.id !== action.id)\n  }\n}",
+      "language": "typescript"
+    },
+    {
+      "title": "Typed Fetch Function",
+      "codeDes": "Create one reusable fetch wrapper with a typed return value.",
+      "code": "async function getJson<T>(url: string): Promise<T> {\n  const response = await fetch(url)\n  if (!response.ok) throw new Error(`Request failed: ${response.status}`)\n  return (await response.json()) as T\n}\n\ntype Post = { id: number; title: string }\ngetJson<Post[]>('https://jsonplaceholder.typicode.com/posts').then(console.log)",
+      "language": "typescript"
+    },
+    {
+      "title": "Run Type Checks and Execute Files",
+      "codeDes": "Use tsc for static checks and tsx for fast local execution.",
+      "code": "npx tsc --noEmit\nnpx tsx src/index.ts\nnpx tsc",
+      "language": "bash"
+    },
+    {
+      "title": "Next Learning Upgrades",
+      "codeDes": "Move from language fundamentals to architecture-level usage.",
+      "code": "1. Add zod schemas and infer TS types from them.\n2. Add utility types for API response normalization.\n3. Add strict lint rules for unsafe any usage.\n4. Add contract tests for typed clients.\n5. Add monorepo packages with shared TypeScript types.",
+      "language": "plaintext"
+    }
+  ]
+}

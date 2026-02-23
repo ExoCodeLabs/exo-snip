@@ -1,67 +1,73 @@
 {
-    "name": "React",
-    "icon": "ReactIcon",
-    "description": "React is a JavaScript library for building interactive user interfaces, particularly single-page applications. This guide walks you through creating a simple To-Do App in React with best practices for project structure.",
-    "snippets": [
-        {
-            "title": "Project Directory Structure",
-            "codeDes": "Step 1: A well-organized project structure helps maintain clean and scalable code. Here’s the recommended file structure for your To-Do App:\n- `todo-app/`: Root directory of the project.\n- `src/`: Contains source code.\n  - `components/`: Contains reusable UI components.\n    - `TodoInput.js`: Component for inputting new to-do items.\n    - `TodoItem.js`: Component for displaying individual to-do items.\n    - `TodoList.js`: Component for displaying the list of to-do items.\n  - `App.js`: Main application component.\n  - `index.js`: Entry point of the React application.\n- `public/`: Contains static files.\n- `package.json`: Contains project metadata and dependencies.\n- `README.md`: Project documentation.",
-            "code": "todo-app/\n│── src/\n│   ├── components/\n│   │   ├── TodoInput.js\n│   │   ├── TodoItem.js\n│   │   ├── TodoList.js\n│   ├── App.js\n│   ├── index.js\n│── public/\n│── package.json\n│── README.md",
-            "language": "plaintext"
-        },
-        {
-            "title": "Install Node.js and Create a React App",
-            "codeDes": "Step 2: Before starting, you need to install Node.js, which is a JavaScript runtime that allows you to run JavaScript on your computer. After installing Node.js, you can create a new React project using a tool called Create React App. This tool sets up everything you need to start building a React application.",
-            "code": "npx create-react-app todo-app\ncd todo-app\nnpm start",
-            "language": "bash"
-        },
-        {
-            "title": "Create a To-Do Component (TodoItem.js)",
-            "codeDes": "Step 3: In this step, you will create a component called TodoItem. This component is responsible for displaying individual to-do items. It will receive information about the to-do item (like its text and whether it is completed) and will apply styles based on whether the item is completed or not.",
-            "code": "import React from 'react';\n\nfunction TodoItem({ text, completed, onToggle }) {\n  return (\n    <li onClick={onToggle} style={{ textDecoration: completed ? 'line-through' : 'none', cursor: 'pointer' }}>\n      {text}\n    </li>\n  );\n}\n\nexport default TodoItem;",
-            "language": "jsx"
-        },
-        {
-            "title": "Manage State with useState Hook (App.js)",
-            "codeDes": "Step 4: In this step, you will use a special feature of React called the useState hook. This feature allows you to manage the state of your application, which means you can keep track of the list of to-dos and update it dynamically as users add or complete tasks.",
-            "code": "import React, { useState } from 'react';\nimport TodoInput from './components/TodoInput';\nimport TodoList from './components/TodoList';\n\nfunction App() {\n  const [todos, setTodos] = useState([]);\n\n  return (\n    <div>\n      <h1>My To-Do List</h1>\n      <TodoInput setTodos={setTodos} />\n      <TodoList todos={todos} setTodos={setTodos} />\n    </div>\n  );\n}\n\nexport default App;",
-            "language": "jsx"
-        },
-        {
-            "title": "Create an Input Component (TodoInput.js)",
-            "codeDes": "Step 5: Here, you will create a component called TodoInput. This component will contain an input field and a button. Users can type a task into the input field and add it to the list when they click the button. This component will help you manage the input and add new to-do items to the list.",
-            "code": "import React, { useState } from 'react';\n\nfunction TodoInput({ setTodos }) {\n  const [input, setInput] = useState('');\n\n  const handleSubmit = (e) => {\n    e.preventDefault();\n    if (input.trim()) {\n      setTodos(prevTodos => [...prevTodos, { text: input, completed: false }]);\n      setInput('');\n    }\n  };\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input value={input} onChange={(e) => setInput(e.target.value)} />\n      <button type=\"submit\">Add</button>\n    </form>\n  );\n}\n\nexport default TodoInput;",
-            "language": "jsx"
-        },
-        {
-            "title": "Display the List of To-Dos (TodoList.js)",
-            "codeDes": "Step 6: In this step, you will create a component called TodoList. This component will take the list of to-dos and display each item using the TodoItem component you created earlier. It will also handle toggling the completion status of each to-do item when clicked.",
-            "code": "import React from 'react';\nimport TodoItem from './TodoItem';\n\nfunction TodoList({ todos, setTodos }) {\n  const toggleTodo = (index) => {\n    setTodos((prevTodos) => {\n      const newTodos = prevTodos.map((todo, i) =>\n        i === index ? { ...todo, completed: !todo.completed } : todo\n      );\n      return newTodos;\n    });\n  };\n\n  return (\n    <ul>\n      {todos.map((todo, index) => (\n        <TodoItem\n          key={index + todo.text}\n          text={todo.text}\n          completed={todo.completed}\n          onToggle={() => toggleTodo(index)}\n        />\n      ))}\n    </ul>\n  );\n}\n\nexport default TodoList;",
-            "language": "jsx"
-        },
-        {
-            "title": "Add CSS for To-Do App",
-            "codeDes": "Step 7: To make your To-Do App look nice, you will create a CSS file. CSS is used to style your application, making it more visually appealing. You will add styles for the body, headings, main container, list, list items, input field, and button.",
-            "code": "/* src/App.css */\nbody {\n  font-family: Arial, sans-serif;\n  background-color: #f0f0f0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n}\n\nh1 {\n  color: #333;\n}\n\ndiv {\n  background: white;\n  padding: 20px;\n  border-radius: 8px;\n  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n}\n\nul {\n  list-style: none;\n  padding: 0;\n}\n\nli {\n  padding: 10px;\n  border-bottom: 1px solid #ddd;\n}\n\nli:last-child {\n  border-bottom: none;\n}\n\ninput {\n  padding: 10px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  margin-right: 10px;\n}\n\nbutton {\n  padding: 10px 15px;\n  border: none;\n  background-color: #28a745;\n  color: white;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background-color: #218838;\n}",
-            "language": "css"
-        },
-        {
-            "title": "Complete To-Do App Code (App.js)",
-            "codeDes": "Step 8: In this final step, you will integrate all the sub-components and manage the application's state in the main App component. You will also import the CSS file to apply the styles you created earlier. This step brings everything together to make your To-Do App fully functional.",
-            "code": "import React, { useState } from 'react';\nimport './App.css';\nimport TodoInput from './components/TodoInput';\nimport TodoList from './components/TodoList';\n\nfunction App() {\n  const [todos, setTodos] = useState([]);\n\n  return (\n    <div>\n      <h1>My To-Do List</h1>\n      <TodoInput setTodos={setTodos} />\n      <TodoList todos={todos} setTodos={setTodos} />\n    </div>\n  );\n}\n\nexport default App;",
-            "language": "jsx"
-        },
-        {
-            "title": "Run the To-Do App",
-            "codeDes": "Step 9: Now that your To-Do App is complete, you can start the React development server to see your app in action. This will allow you to interact with your To-Do App in a web browser.",
-            "code": "npm start",
-            "language": "bash"
-        },
-        {
-            "title": "Best Practices for Project Structure",
-            "codeDes": "Step 10: Follow these best practices to keep your project clean and maintainable:\n1. Use a components folder: Keep UI components in `src/components/` for better organization.\n2. Separate logic from presentation: Maintain state and logic in `App.js` while keeping reusable UI elements in separate components.\n3. Use meaningful file names: Avoid generic names like `Component.js`, use `TodoInput.js`, `TodoList.js`, etc.\n4. Keep functions reusable: Functions like `toggleTodo` should be kept modular for reusability.\n5. Keep styling separate: Use a `styles/` folder or CSS-in-JS solutions like Styled Components.",
-            "code": "1. Use a components folder: Keep UI components in `src/components/` for better organization.\n2. Separate logic from presentation: Maintain state and logic in `App.js` while keeping reusable UI elements in separate components.\n3. Use meaningful file names: Avoid generic names like `Component.js`, use `TodoInput.js`, `TodoList.js`, etc.\n4. Keep functions reusable: Functions like `toggleTodo` should be kept modular for reusability.\n5. Keep styling separate: Use a `styles/` folder or CSS-in-JS solutions like Styled Components.",
-            "language": "bash"
-        }
-    ]
+  "name": "React",
+  "icon": "ReactIcon",
+  "description": "React is a UI library for building interactive interfaces from reusable components. This track starts with foundations and ends with a small project-style feature set.",
+  "snippets": [
+    {
+      "title": "Project Structure for a Learning React App",
+      "codeDes": "Use a predictable structure so state logic, UI, and tests stay easy to find as your app grows.",
+      "code": "react-task-lab/\n  src/\n    components/\n      TaskForm.jsx\n      TaskList.jsx\n      Pomodoro.jsx\n    hooks/\n      useLocalStorage.js\n      usePomodoro.js\n    state/\n      tasksReducer.js\n    App.jsx\n    main.jsx\n  tests/\n    TaskList.test.jsx\n  package.json",
+      "language": "plaintext"
+    },
+    {
+      "title": "Create the Project with Vite",
+      "codeDes": "Create, install dependencies, and start a modern React development server.",
+      "code": "npm create vite@latest react-task-lab -- --template react\ncd react-task-lab\nnpm install\nnpm run dev",
+      "language": "bash"
+    },
+    {
+      "title": "Task State with useReducer (src/state/tasksReducer.js)",
+      "codeDes": "useReducer keeps task updates explicit and easier to scale than chained setState calls.",
+      "code": "export const initialTasks = []\n\nexport function tasksReducer(state, action) {\n  switch (action.type) {\n    case 'task/added':\n      return [...state, { id: crypto.randomUUID(), text: action.text, done: false }]\n    case 'task/toggled':\n      return state.map((task) =>\n        task.id === action.id ? { ...task, done: !task.done } : task\n      )\n    case 'task/removed':\n      return state.filter((task) => task.id !== action.id)\n    default:\n      return state\n  }\n}",
+      "language": "javascript"
+    },
+    {
+      "title": "Task Form Component (src/components/TaskForm.jsx)",
+      "codeDes": "Keep input state local and dispatch clean actions to your reducer.",
+      "code": "import { useState } from 'react'\n\nexport default function TaskForm({ dispatch }) {\n  const [text, setText] = useState('')\n\n  const onSubmit = (event) => {\n    event.preventDefault()\n    if (!text.trim()) return\n    dispatch({ type: 'task/added', text: text.trim() })\n    setText('')\n  }\n\n  return (\n    <form onSubmit={onSubmit}>\n      <input value={text} onChange={(e) => setText(e.target.value)} />\n      <button type='submit'>Add Task</button>\n    </form>\n  )\n}",
+      "language": "jsx"
+    },
+    {
+      "title": "Task List Component (src/components/TaskList.jsx)",
+      "codeDes": "Render list state declaratively and keep actions near UI controls.",
+      "code": "export default function TaskList({ tasks, dispatch }) {\n  return (\n    <ul>\n      {tasks.map((task) => (\n        <li key={task.id}>\n          <label>\n            <input\n              type='checkbox'\n              checked={task.done}\n              onChange={() => dispatch({ type: 'task/toggled', id: task.id })}\n            />\n            {task.text}\n          </label>\n          <button onClick={() => dispatch({ type: \"task/removed\", id: task.id })}>\n            Delete\n          </button>\n        </li>\n      ))}\n    </ul>\n  )\n}",
+      "language": "jsx"
+    },
+    {
+      "title": "Persist Tasks with localStorage (src/hooks/useLocalStorage.js)",
+      "codeDes": "A reusable hook keeps persistence logic out of UI components.",
+      "code": "import { useEffect, useState } from 'react'\n\nexport function useLocalStorage(key, initialValue) {\n  const [value, setValue] = useState(() => {\n    const raw = localStorage.getItem(key)\n    return raw ? JSON.parse(raw) : initialValue\n  })\n\n  useEffect(() => {\n    localStorage.setItem(key, JSON.stringify(value))\n  }, [key, value])\n\n  return [value, setValue]\n}",
+      "language": "javascript"
+    },
+    {
+      "title": "Compose the App (src/App.jsx)",
+      "codeDes": "Wire reducer + persistence together, then render focused child components.",
+      "code": "import { useReducer, useEffect } from 'react'\nimport TaskForm from './components/TaskForm'\nimport TaskList from './components/TaskList'\nimport { initialTasks, tasksReducer } from './state/tasksReducer'\nimport { useLocalStorage } from './hooks/useLocalStorage'\n\nexport default function App() {\n  const [savedTasks, setSavedTasks] = useLocalStorage('tasks', initialTasks)\n  const [tasks, dispatch] = useReducer(tasksReducer, savedTasks)\n\n  useEffect(() => setSavedTasks(tasks), [tasks, setSavedTasks])\n\n  return (\n    <>\n      <h1>Task Lab</h1>\n      <TaskForm dispatch={dispatch} />\n      <TaskList tasks={tasks} dispatch={dispatch} />\n    </>\n  )\n}",
+      "language": "jsx"
+    },
+    {
+      "title": "Mini Project: Pomodoro Hook (src/hooks/usePomodoro.js)",
+      "codeDes": "Small project idea: build a focus timer. Start with a pure timing hook so UI stays simple.",
+      "code": "import { useEffect, useState } from 'react'\n\nexport function usePomodoro(seconds = 1500) {\n  const [remaining, setRemaining] = useState(seconds)\n  const [running, setRunning] = useState(false)\n\n  useEffect(() => {\n    if (!running) return\n    const id = setInterval(() => setRemaining((s) => Math.max(0, s - 1)), 1000)\n    return () => clearInterval(id)\n  }, [running])\n\n  return { remaining, running, setRunning, reset: () => setRemaining(seconds) }\n}",
+      "language": "javascript"
+    },
+    {
+      "title": "Mini Project: Pomodoro UI (src/components/Pomodoro.jsx)",
+      "codeDes": "Connect hook state to controls and keep formatting logic close to rendering.",
+      "code": "import { usePomodoro } from '../hooks/usePomodoro'\n\nexport default function Pomodoro() {\n  const { remaining, running, setRunning, reset } = usePomodoro(25 * 60)\n  const mm = String(Math.floor(remaining / 60)).padStart(2, \"0\")\n  const ss = String(remaining % 60).padStart(2, \"0\")\n\n  return (\n    <section>\n      <h2>Pomodoro</h2>\n      <p>{mm}:{ss}</p>\n      <button onClick={() => setRunning((v) => !v)}>{running ? \"Pause\" : \"Start\"}</button>\n      <button onClick={reset}>Reset</button>\n    </section>\n  )\n}",
+      "language": "jsx"
+    },
+    {
+      "title": "Component Test with React Testing Library",
+      "codeDes": "Start testing behavior by user interactions, not implementation details.",
+      "code": "import { render, screen } from '@testing-library/react'\nimport userEvent from '@testing-library/user-event'\nimport TaskForm from '../src/components/TaskForm'\n\ntest('dispatches task/added after submit', async () => {\n  const user = userEvent.setup()\n  const dispatch = vi.fn()\n  render(<TaskForm dispatch={dispatch} />)\n  await user.type(screen.getByRole('textbox'), 'Read docs')\n  await user.click(screen.getByRole('button', { name: /add task/i }))\n  expect(dispatch).toHaveBeenCalledWith({ type: 'task/added', text: 'Read docs' })\n})",
+      "language": "javascript"
+    },
+    {
+      "title": "Next Learning Upgrades",
+      "codeDes": "After the starter and mini project, level up with production patterns.",
+      "code": "1. Add routing with React Router for task views and settings.\n2. Add optimistic UI when syncing tasks to an API.\n3. Add accessibility checks (keyboard nav, aria labels).\n4. Add form validation with zod + react-hook-form.\n5. Add end-to-end tests with Playwright.",
+      "language": "plaintext"
+    }
+  ]
 }

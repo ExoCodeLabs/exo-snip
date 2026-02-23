@@ -1,0 +1,73 @@
+{
+  "name": "Python",
+  "icon": "PythonIcon",
+  "description": "Python is great for scripting, backend work, automation, and data processing. This track covers practical fundamentals and a mini CLI project.",
+  "snippets": [
+    {
+      "title": "Create Virtual Environment and Install Tools",
+      "codeDes": "Isolate dependencies for each project and keep setup reproducible.",
+      "code": "python3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install --upgrade pip\npip install pytest",
+      "language": "bash"
+    },
+    {
+      "title": "Project Structure for Python CLI Learning",
+      "codeDes": "Separate application modules, data, and tests from the start.",
+      "code": "habit-tracker/\n  app/\n    __init__.py\n    models.py\n    storage.py\n    cli.py\n  data/\n    habits.json\n  tests/\n    test_storage.py\n  requirements.txt",
+      "language": "plaintext"
+    },
+    {
+      "title": "Model Data with dataclass (app/models.py)",
+      "codeDes": "dataclass gives readable domain objects without boilerplate.",
+      "code": "from dataclasses import dataclass\n\n@dataclass\nclass Habit:\n    id: str\n    name: str\n    streak: int = 0\n    completed_today: bool = False",
+      "language": "python"
+    },
+    {
+      "title": "JSON Storage Helpers (app/storage.py)",
+      "codeDes": "Keep file operations in one module for easier testing.",
+      "code": "import json\nfrom pathlib import Path\n\nDATA_FILE = Path(\"data/habits.json\")\n\ndef read_habits() -> list[dict]:\n    if not DATA_FILE.exists():\n        return []\n    return json.loads(DATA_FILE.read_text())\n\ndef save_habits(habits: list[dict]) -> None:\n    DATA_FILE.write_text(json.dumps(habits, indent=2))",
+      "language": "python"
+    },
+    {
+      "title": "CLI with argparse (app/cli.py)",
+      "codeDes": "Use subcommands to grow from one script into a maintainable CLI.",
+      "code": "import argparse\n\ndef build_parser() -> argparse.ArgumentParser:\n    parser = argparse.ArgumentParser(prog=\"habit\")\n    sub = parser.add_subparsers(dest=\"command\", required=True)\n\n    add_cmd = sub.add_parser(\"add\")\n    add_cmd.add_argument(\"name\")\n\n    sub.add_parser(\"list\")\n    return parser",
+      "language": "python"
+    },
+    {
+      "title": "CLI Command Dispatch (app/cli.py)",
+      "codeDes": "Parse arguments once, then delegate to focused command functions.",
+      "code": "from app.commands import add_habit, list_habits\n\ndef main() -> None:\n    parser = build_parser()\n    args = parser.parse_args()\n\n    if args.command == \"add\":\n        add_habit(args.name)\n    elif args.command == \"list\":\n        list_habits()\n\nif __name__ == \"__main__\":\n    main()",
+      "language": "python"
+    },
+    {
+      "title": "Mini Project: Add Habit Command",
+      "codeDes": "Command handlers should validate input and persist changes.",
+      "code": "from uuid import uuid4\nfrom app.storage import read_habits, save_habits\n\ndef add_habit(name: str) -> None:\n    habits = read_habits()\n    habits.append({\n        \"id\": str(uuid4()),\n        \"name\": name,\n        \"streak\": 0,\n        \"completed_today\": False,\n    })\n    save_habits(habits)",
+      "language": "python"
+    },
+    {
+      "title": "Mini Project: Mark Habit Complete",
+      "codeDes": "Update one record safely and keep command behavior deterministic.",
+      "code": "from app.storage import read_habits, save_habits\n\ndef complete_habit(habit_id: str) -> bool:\n    habits = read_habits()\n    for habit in habits:\n        if habit[\"id\"] == habit_id:\n            habit[\"completed_today\"] = True\n            habit[\"streak\"] += 1\n            save_habits(habits)\n            return True\n    return False",
+      "language": "python"
+    },
+    {
+      "title": "Automated Test Example (tests/test_storage.py)",
+      "codeDes": "Test critical persistence behavior before adding more commands.",
+      "code": "from app.storage import save_habits, read_habits\n\ndef test_round_trip(tmp_path, monkeypatch):\n    from app import storage\n    monkeypatch.setattr(storage, \"DATA_FILE\", tmp_path / \"habits.json\")\n\n    expected = [{\"id\": \"1\", \"name\": \"Read\", \"streak\": 2, \"completed_today\": False}]\n    save_habits(expected)\n    assert read_habits() == expected",
+      "language": "python"
+    },
+    {
+      "title": "Run the Habit Tracker",
+      "codeDes": "Run these commands while practicing the mini project flow.",
+      "code": "python -m app.cli add \"Workout\"\npython -m app.cli list\npytest -q",
+      "language": "bash"
+    },
+    {
+      "title": "Next Learning Upgrades",
+      "codeDes": "Use this path to evolve your Python snippets into real tooling.",
+      "code": "1. Add rich terminal output with rich or typer.\n2. Add SQLite persistence with SQLModel.\n3. Add cron-based reminders for missed habits.\n4. Add packaging with pyproject.toml.\n5. Add GitHub Actions test automation.",
+      "language": "plaintext"
+    }
+  ]
+}

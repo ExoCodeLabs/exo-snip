@@ -1,4 +1,5 @@
 import Link from "next/link"
+import TechStacks from "@/lib/content"
 import {
   CodepenIcon as ReactIcon,
   GitGraphIcon as Git,
@@ -13,10 +14,9 @@ const technologies = [
   { name: "React", slug: "react", icon: ReactIcon },
   { name: "Node.js", slug: "nodejs", icon: Nodejs },
   { name: "Git", slug: "git", icon: Git },
-
-  // { name: "JavaScript", slug: "javascript", icon: FileJson },
-  // { name: "TypeScript", slug: "typescript", icon: FileType },
-  // { name: "Python", slug: "python", icon: Python },
+  { name: "JavaScript", slug: "javascript", icon: FileJson },
+  { name: "TypeScript", slug: "typescript", icon: FileType },
+  { name: "Python", slug: "python", icon: Python },
 ]
 
 const roadmaps = [
@@ -25,6 +25,8 @@ const roadmaps = [
   { name: "DevOps", url: "https://roadmap.sh/devops" },
   { name: "React", url: "https://roadmap.sh/react" },
   { name: "JavaScript", url: "https://roadmap.sh/javascript" },
+  { name: "Node.js", url: "https://roadmap.sh/nodejs" },
+  { name: "Python", url: "https://roadmap.sh/python" },
 ]
 
 export default function Home() {
@@ -46,7 +48,10 @@ export default function Home() {
                 {tech.name}
               </h3>
             </div>
-            <p className="text-gray-400">View {tech.name} snippets</p>
+            <p className="text-gray-400">
+              View {TechStacks[tech.slug]?.snippets?.length || 0} curated
+              snippets
+            </p>
           </Link>
         ))}
       </div>

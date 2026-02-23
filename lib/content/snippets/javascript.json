@@ -1,0 +1,73 @@
+{
+  "name": "JavaScript",
+  "icon": "FileJson",
+  "description": "JavaScript is the core language of the web and a strong tool for scripting and backend development. This track covers modern syntax, async flows, and a mini project.",
+  "snippets": [
+    {
+      "title": "Set Up a JavaScript Playground",
+      "codeDes": "Create a simple workspace for running modern JavaScript in Node.js.",
+      "code": "mkdir js-playground\ncd js-playground\nnpm init -y\nnpm pkg set type=module\nnode -v",
+      "language": "bash"
+    },
+    {
+      "title": "Objects, Destructuring, and Template Strings",
+      "codeDes": "Use concise syntax to write cleaner, more readable data transforms.",
+      "code": "const user = { id: 7, name: 'Ava', role: 'admin' }\nconst { name, role } = user\nconsole.log(`${name} can access ${role} tools`)\n\nconst merged = { ...user, active: true }\nconsole.log(merged)",
+      "language": "javascript"
+    },
+    {
+      "title": "Array map/filter/reduce Pattern",
+      "codeDes": "Practice the three most common immutable operations in app code.",
+      "code": "const prices = [12, 40, 8, 22]\nconst discounted = prices.map((p) => p * 0.9)\nconst overTen = discounted.filter((p) => p > 10)\nconst total = overTen.reduce((sum, p) => sum + p, 0)\nconsole.log({ discounted, overTen, total })",
+      "language": "javascript"
+    },
+    {
+      "title": "Async/Await with Error Handling",
+      "codeDes": "Wrap async network calls in try/catch and return predictable values.",
+      "code": "async function loadUsers() {\n  try {\n    const res = await fetch('https://jsonplaceholder.typicode.com/users')\n    if (!res.ok) throw new Error('Request failed')\n    return await res.json()\n  } catch (error) {\n    console.error('loadUsers failed:', error.message)\n    return []\n  }\n}\n\nloadUsers().then((users) => console.log(users.length))",
+      "language": "javascript"
+    },
+    {
+      "title": "Reusable Debounce Utility",
+      "codeDes": "Debounce helps reduce expensive work on rapid input events.",
+      "code": "export function debounce(fn, wait = 250) {\n  let timeoutId\n  return (...args) => {\n    clearTimeout(timeoutId)\n    timeoutId = setTimeout(() => fn(...args), wait)\n  }\n}",
+      "language": "javascript"
+    },
+    {
+      "title": "Mini Project: Expense Tracker Structure",
+      "codeDes": "Small project idea: track expenses from the terminal with JSON persistence.",
+      "code": "expense-tracker/\n  src/\n    commands/addExpense.js\n    commands/listExpenses.js\n    storage.js\n    index.js\n  data/expenses.json",
+      "language": "plaintext"
+    },
+    {
+      "title": "Mini Project: JSON Storage Module (src/storage.js)",
+      "codeDes": "Keep file I/O in one module so command handlers stay focused.",
+      "code": "import { readFile, writeFile } from 'node:fs/promises'\nconst FILE = new URL('../data/expenses.json', import.meta.url)\n\nexport async function readExpenses() {\n  const raw = await readFile(FILE, \"utf8\")\n  return JSON.parse(raw)\n}\n\nexport async function saveExpenses(expenses) {\n  await writeFile(FILE, JSON.stringify(expenses, null, 2))\n}",
+      "language": "javascript"
+    },
+    {
+      "title": "Mini Project: Add Expense Command (src/commands/addExpense.js)",
+      "codeDes": "Each command should validate input, then update storage.",
+      "code": "import { readExpenses, saveExpenses } from '../storage.js'\n\nexport async function addExpense(description, amount) {\n  const value = Number(amount)\n  if (!description || Number.isNaN(value)) throw new Error(\"Invalid input\")\n  const expenses = await readExpenses()\n  expenses.push({ id: crypto.randomUUID(), description, amount: value })\n  await saveExpenses(expenses)\n}",
+      "language": "javascript"
+    },
+    {
+      "title": "Mini Project: CLI Entrypoint (src/index.js)",
+      "codeDes": "Route command-line arguments to feature modules.",
+      "code": "import { addExpense } from './commands/addExpense.js'\nimport { readExpenses } from './storage.js'\n\nconst [command, ...args] = process.argv.slice(2)\n\nif (command === 'add') {\n  await addExpense(args[0], args[1])\n} else if (command === 'list') {\n  console.table(await readExpenses())\n} else {\n  console.log('Usage: node src/index.js <add|list> [...args]')\n}",
+      "language": "javascript"
+    },
+    {
+      "title": "Run the Expense Tracker",
+      "codeDes": "Use simple scripts while practicing CLI and data persistence.",
+      "code": "node src/index.js add \"Coffee\" 4.5\nnode src/index.js add \"Notebook\" 9.99\nnode src/index.js list",
+      "language": "bash"
+    },
+    {
+      "title": "Next Learning Upgrades",
+      "codeDes": "Use these to continue beyond language basics.",
+      "code": "1. Add schema validation with zod or custom guards.\n2. Add unit tests for command handlers.\n3. Add CSV export support.\n4. Add monthly totals and category reports.\n5. Add a small browser UI on top of the same logic.",
+      "language": "plaintext"
+    }
+  ]
+}
