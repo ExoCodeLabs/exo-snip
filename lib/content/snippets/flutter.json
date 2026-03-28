@@ -1,0 +1,73 @@
+{
+  "name": "Flutter",
+  "icon": "Smartphone",
+  "description": "Flutter lets you build mobile, desktop, and web apps from one Dart codebase. This track covers project setup, core widgets, async data loading, and a simple testing loop.",
+  "snippets": [
+    {
+      "title": "Create a New Flutter App",
+      "codeDes": "Generate a starter app, enter the project, and run it on a connected simulator or device.",
+      "code": "flutter create habit_flow\ncd habit_flow\nflutter pub add http\nflutter run",
+      "language": "bash"
+    },
+    {
+      "title": "Recommended Project Structure",
+      "codeDes": "Split features, data, and widgets early so the app stays navigable as screens grow.",
+      "code": "lib/\n  main.dart\n  app.dart\n  features/\n    habits/\n      data/\n        habit_service.dart\n      models/\n        habit.dart\n      presentation/\n        habit_list_screen.dart\n        widgets/\n          habit_tile.dart\n  shared/\n    theme/\n      app_theme.dart\n    widgets/\n      app_scaffold.dart\ntest/\n  widget_test.dart",
+      "language": "plaintext"
+    },
+    {
+      "title": "Bootstrap MaterialApp (lib/main.dart)",
+      "codeDes": "Keep app-level theme and routes near the entrypoint so every screen inherits the same setup.",
+      "code": "import 'package:flutter/material.dart';\n\nvoid main() {\n  runApp(const HabitFlowApp());\n}\n\nclass HabitFlowApp extends StatelessWidget {\n  const HabitFlowApp({super.key});\n\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Habit Flow',\n      theme: ThemeData(\n        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),\n        useMaterial3: true,\n      ),\n      home: const HabitListScreen(),\n    );\n  }\n}\n\nclass HabitListScreen extends StatelessWidget {\n  const HabitListScreen({super.key});\n\n  @override\n  Widget build(BuildContext context) {\n    return const Scaffold(\n      body: Center(child: Text('Your habits go here')),\n    );\n  }\n}",
+      "language": "dart"
+    },
+    {
+      "title": "Reusable Stateless Widget",
+      "codeDes": "Move repeated UI into small widgets with explicit inputs instead of rebuilding layout inline.",
+      "code": "import 'package:flutter/material.dart';\n\nclass HabitTile extends StatelessWidget {\n  const HabitTile({\n    super.key,\n    required this.name,\n    required this.streak,\n    required this.onTap,\n  });\n\n  final String name;\n  final int streak;\n  final VoidCallback onTap;\n\n  @override\n  Widget build(BuildContext context) {\n    return ListTile(\n      title: Text(name),\n      subtitle: Text('Streak: $streak days'),\n      trailing: const Icon(Icons.chevron_right),\n      onTap: onTap,\n    );\n  }\n}",
+      "language": "dart"
+    },
+    {
+      "title": "Form State with StatefulWidget",
+      "codeDes": "Keep small, screen-local input state inside a StatefulWidget before reaching for heavier state libraries.",
+      "code": "import 'package:flutter/material.dart';\n\nclass AddHabitScreen extends StatefulWidget {\n  const AddHabitScreen({super.key});\n\n  @override\n  State<AddHabitScreen> createState() => _AddHabitScreenState();\n}\n\nclass _AddHabitScreenState extends State<AddHabitScreen> {\n  final _controller = TextEditingController();\n\n  @override\n  void dispose() {\n    _controller.dispose();\n    super.dispose();\n  }\n\n  void _submit() {\n    final name = _controller.text.trim();\n    if (name.isEmpty) return;\n    Navigator.pop(context, name);\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(title: const Text('Add Habit')),\n      body: Padding(\n        padding: const EdgeInsets.all(16),\n        child: Column(\n          children: [\n            TextField(controller: _controller),\n            const SizedBox(height: 12),\n            ElevatedButton(onPressed: _submit, child: const Text('Save')),\n          ],\n        ),\n      ),\n    );\n  }\n}",
+      "language": "dart"
+    },
+    {
+      "title": "Model JSON Data with a Dart Class",
+      "codeDes": "Parsing at the edge keeps your widgets focused on rendering instead of data cleanup.",
+      "code": "class Habit {\n  const Habit({\n    required this.id,\n    required this.name,\n    required this.streak,\n  });\n\n  final String id;\n  final String name;\n  final int streak;\n\n  factory Habit.fromJson(Map<String, dynamic> json) {\n    return Habit(\n      id: json['id'] as String,\n      name: json['name'] as String,\n      streak: json['streak'] as int,\n    );\n  }\n\n  Map<String, dynamic> toJson() => {\n        'id': id,\n        'name': name,\n        'streak': streak,\n      };\n}",
+      "language": "dart"
+    },
+    {
+      "title": "Fetch Remote Data in a Service",
+      "codeDes": "Wrap network calls in a service so screens depend on a clear API instead of raw HTTP details.",
+      "code": "import 'dart:convert';\nimport 'package:http/http.dart' as http;\n\nclass HabitService {\n  Future<List<Habit>> fetchHabits() async {\n    final response = await http.get(Uri.parse('https://example.com/api/habits'));\n\n    if (response.statusCode != 200) {\n      throw Exception('Failed to load habits');\n    }\n\n    final data = jsonDecode(response.body) as List<dynamic>;\n    return data\n        .map((item) => Habit.fromJson(item as Map<String, dynamic>))\n        .toList();\n  }\n}",
+      "language": "dart"
+    },
+    {
+      "title": "Render Async Data with FutureBuilder",
+      "codeDes": "FutureBuilder is a simple starting point for one-shot loading states and error handling.",
+      "code": "class HabitListScreen extends StatelessWidget {\n  HabitListScreen({super.key});\n\n  final HabitService service = HabitService();\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(title: const Text('Habits')),\n      body: FutureBuilder<List<Habit>>(\n        future: service.fetchHabits(),\n        builder: (context, snapshot) {\n          if (snapshot.connectionState != ConnectionState.done) {\n            return const Center(child: CircularProgressIndicator());\n          }\n          if (snapshot.hasError) {\n            return Center(child: Text(snapshot.error.toString()));\n          }\n\n          final habits = snapshot.data ?? const [];\n          return ListView.builder(\n            itemCount: habits.length,\n            itemBuilder: (context, index) {\n              final habit = habits[index];\n              return HabitTile(\n                name: habit.name,\n                streak: habit.streak,\n                onTap: () {},\n              );\n            },\n          );\n        },\n      ),\n    );\n  }\n}",
+      "language": "dart"
+    },
+    {
+      "title": "Push to a Named Route",
+      "codeDes": "Start with Navigator APIs directly before adopting a routing package for larger apps.",
+      "code": "MaterialApp(\n  initialRoute: '/',\n  routes: {\n    '/': (context) => const HabitListScreen(),\n    '/add-habit': (context) => const AddHabitScreen(),\n  },\n)\n\nFloatingActionButton(\n  onPressed: () => Navigator.pushNamed(context, '/add-habit'),\n  child: const Icon(Icons.add),\n)",
+      "language": "dart"
+    },
+    {
+      "title": "Widget Test for a Screen",
+      "codeDes": "Test visible behavior first so refactors do not break user-facing flows silently.",
+      "code": "import 'package:flutter/material.dart';\nimport 'package:flutter_test/flutter_test.dart';\n\nvoid main() {\n  testWidgets('shows add habit button', (tester) async {\n    await tester.pumpWidget(\n      const MaterialApp(\n        home: Scaffold(\n          floatingActionButton: FloatingActionButton(\n            onPressed: null,\n            child: Icon(Icons.add),\n          ),\n        ),\n      ),\n    );\n\n    expect(find.byIcon(Icons.add), findsOneWidget);\n  });\n}",
+      "language": "dart"
+    },
+    {
+      "title": "Next Learning Upgrades",
+      "codeDes": "Once the basics are comfortable, expand into production-ready Flutter patterns.",
+      "code": "1. Add freezed or sealed classes for richer state models.\n2. Add Riverpod or Bloc when local widget state stops scaling.\n3. Add Dio interceptors for auth, retries, and logging.\n4. Add integration tests for navigation and forms.\n5. Add offline caching with Hive or Drift.",
+      "language": "plaintext"
+    }
+  ]
+}
