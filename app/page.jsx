@@ -7,6 +7,7 @@ import {
   FileJson,
   FileType,
   PiIcon as Python,
+  Smartphone as Flutter,
 } from "lucide-react"
 
 const technologies = [
@@ -17,6 +18,7 @@ const technologies = [
   { name: "JavaScript", slug: "javascript", icon: FileJson },
   { name: "TypeScript", slug: "typescript", icon: FileType },
   { name: "Python", slug: "python", icon: Python },
+  { name: "Flutter", slug: "flutter", icon: Flutter },
 ]
 
 const roadmaps = [
